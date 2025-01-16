@@ -11,8 +11,7 @@ Authors@R:
            comment = c(ORCID = "0000-0003-3157-6566")
 Maintainer: Alaina Pearce <gu.alaina.pearce@gmail.com>
 Description: This package is the data pipeline for the Home Observations of Meals and Environment (HOME) Bytes study.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: `use_gpl3_license()`
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/alainapearce/homebyteR.git
@@ -21,6 +20,8 @@ Imports:
     stats,
     childsds,
     lubridate
+Remotes:
+    alainapearce/dataprepr
 Suggests: 
     knitr,
     rmarkdown,
