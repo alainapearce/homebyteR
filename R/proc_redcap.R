@@ -76,7 +76,7 @@ proc_redcap <- function(survey_data_path, data_de_path, overwrite = FALSE, retur
   }
 
   # check file existis
-  if (!file.exists(visit_data_file)) {
+  if (!file.exists(survey_data_path)) {
     stop ('entered survey_data_path is not an existing file - be sure it is entered as a string and contains the full data path and file name')
   }
 
@@ -92,15 +92,17 @@ proc_redcap <- function(survey_data_path, data_de_path, overwrite = FALSE, retur
   sub_dat <- redcap_survey_data[redcap_survey_data[['redcap_event_name']] == 'event_1_arm_1', ]
   sub_dat <- sub_dat[, !colSums(is.na(sub_dat) | sub_dat == "") == nrow(sub_dat)]
 
+  # remove withdrawn and pilot rows
+  sub_dat <- sub_dat[sub_dat['record_id'] != '16' & sub_dat['record_id'] != 'Pilot', ]
+
   # process visit data ####
 
-  parent_survey1 <- sub_dat[, grepl('^date_', names(sub_dat)) | grepl('^bedtime_', names(sub_dat)) | grepl('^attempt_', names(sub_dat)) | grepl('^asleep_', names(sub_dat)) | grepl('^times_', names(sub_dat)) | grepl('^waso_', names(sub_dat)) | grepl('^awake_', names(sub_dat)) | grepl('^out_', names(sub_dat)) | grepl('^demo', names(sub_dat)) | grepl('^pds', names(sub_dat)) | grepl('^tanner', names(sub_dat)) | grepl('^efcr', names(sub_dat)) | grepl('^spsrq', names(sub_dat)) | grepl('^hcq', names(sub_dat)) | grepl('^cshq', names(sub_dat)) | grepl('^cebq', names(sub_dat))]
+  parent_survey1 <- sub_dat[, grepl('^record_id', names(sub_dat)) | grepl('^date_', names(sub_dat)) | grepl('^bedtime_', names(sub_dat)) | grepl('^attempt_', names(sub_dat)) | grepl('^asleep_', names(sub_dat)) | grepl('^times_', names(sub_dat)) | grepl('^waso_', names(sub_dat)) | grepl('^awake_', names(sub_dat)) | grepl('^out_', names(sub_dat)) | grepl('^demo', names(sub_dat)) | grepl('^pds', names(sub_dat)) | grepl('^tanner', names(sub_dat)) | grepl('^efcr', names(sub_dat)) | grepl('^spsrq', names(sub_dat)) | grepl('^hcq', names(sub_dat)) | grepl('^cshq', names(sub_dat)) | grepl('^cebq', names(sub_dat))]
 
-  parent_survey2 <- sub_dat[, grepl('^ffq', names(sub_dat)) | grepl('^fmcb', names(sub_dat)) | grepl('^scpf', names(sub_dat)) | grepl('^ffbs', names(sub_dat)) | grepl('^hfe', names(sub_dat)) | grepl('^pwlb', names(sub_dat)) | grepl('^tfeq', names(sub_dat)) | grepl('^cfq', names(sub_dat))]
+  parent_survey2 <- sub_dat[, grepl('^record_id', names(sub_dat)) | grepl('^ffq', names(sub_dat)) | grepl('^fmcb', names(sub_dat)) | grepl('^scpf', names(sub_dat)) | grepl('^ffbs', names(sub_dat)) | grepl('^hfe', names(sub_dat)) | grepl('^pwlb', names(sub_dat)) | grepl('^tfeq', names(sub_dat)) | grepl('^cfq', names(sub_dat))]
 
   # organize event data
-  parent_survey1_data <- util_redcap_parent1(parent_visit_1_arm_1, prepost_v1_data$demo[c('participant_id', 'v1_date')])
-  child_v2_data <- util_redcap_child2(parent_survey1)
+  parent_survey1_data <- util_redcap_parent1(parent_survey1)
   parent_surveyw_data <- util_redcap_parent2(parent_survey2)
 
   #### Load and organize double-entry data ####
